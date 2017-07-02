@@ -1,0 +1,19 @@
+{
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "http://github.com/Zergu1ar/CommonLibs"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Todo\\": "src/Todo"
+    }
+  },
+  "require": {
+    "cboden/ratchet": "0.3.*",
+    "zergular/common": "dev-master",
+    "php-di/php-di": "^5.4",
+    "predis/predis": "^1.1"
+  }
+}

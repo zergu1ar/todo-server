@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script>
+    var conn = new WebSocket('ws://localhost:8080');
+    conn.onopen = function(e) {
+        conn.send(JSON.stringify({'action':'getList', 'id':1, 'token': '2580225c0cb08f7ff69cf080508f7eb843a18239'}));
+        console.log("Connection established!");
+    };
+
+    conn.onmessage = function(e) {
+        console.log(JSON.parse(e.data));
+    };
+
+
+    function sendMessage() {
+        conn.send('Hello World!');
+    }
+</script>
+<button type="button" value="Send" onclick="sendMessage()">Send</button>
+</body>
+</html>
