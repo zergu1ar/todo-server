@@ -12,10 +12,12 @@ use Ratchet\WebSocket\WsServer;
 use Todo\Sockets;
 use \Medoo\Medoo;
 use Todo\ICache;
-use Todo\Cache;
+use Todo\Redis;
+use Todo\UserApi;
 
-require_once '../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
+define('USER_API_URL', 'http://127.0.0.1:8080/');
 
 $builder = new DI\ContainerBuilder();
 $builder->addDefinitions([
@@ -31,26 +33,26 @@ $builder->addDefinitions([
     Predis\Client::class => DI\object(Predis\Client::class)
         ->constructor([
             'scheme' => 'tcp',
-            'host'   => '127.0.0.1',
-            'port'   => 6379
+            'host' => '127.0.0.1',
+            'port' => 6379
         ]),
-    ICache::class => DI\object(Cache::class)
+    ICache::class => DI\object(Redis::class),
+    UserApi::class => DI\object(UserApi::class)
+        ->constructor(USER_API_URL)
 ]);
 
 $container = $builder->build();
 
-
-$controller = $container->get('\\Todo\\Controller');
-var_dump($controller->getLists(1));
-
-die;
 $server = IoServer::factory(
     new HttpServer(
         new WsServer(
-            new Sockets($controller)
+            new Sockets(
+                $container->get('\\Todo\\Controller'),
+                $container->get('\\Todo\\UserApi')
+            )
         )
     ),
-    8080
+    8000
 );
 
 $server->run();

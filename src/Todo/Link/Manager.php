@@ -6,7 +6,7 @@
  * Time: 19:27
  */
 
-namespace Todo\tLink;
+namespace Todo\Link;
 
 use Zergular\Common\AbstractManager;
 
@@ -15,7 +15,7 @@ class Manager extends AbstractManager
     /** @var string */
     protected $tableName = 'todoLink';
     /** @var string */
-    protected $entityName = '\\Todo\\tLink\\Entity';
+    protected $entityName = '\\Todo\\Link\\Entity';
 
     /**
      * @param int $userId
@@ -23,6 +23,6 @@ class Manager extends AbstractManager
      */
     public function getSharedIds($userId)
     {
-        return $this->persister->select($this->tableName, 'listId', ['userId' => $userId]);
+        return $this->persister->select($this->tableName, 'ownerId', ['userId' => $userId]);
     }
 }

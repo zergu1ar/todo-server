@@ -6,20 +6,18 @@
  * Time: 18:31
  */
 
-namespace Todo\tList;
+namespace Todo\Task;
 
 use Zergular\Common\AbstractManager;
 
 class Manager extends AbstractManager
 {
-    /** @var string */
-    protected $tableName = 'todoList';
-    /** @var string */
-    protected $entityName = '\\Todo\\tList\\Entity';
+    protected $tableName = 'todoTask';
+    protected $entityName = '\\Todo\\Task\\Entity';
 
     /**
      * @param int $userId
-     * @return array
+     * @return int[]
      */
     public function getOwnIds($userId)
     {

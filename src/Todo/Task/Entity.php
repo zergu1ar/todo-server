@@ -6,7 +6,7 @@
  * Time: 18:27
  */
 
-namespace Todo\tList;
+namespace Todo\Task;
 
 use Zergular\Common\AbstractEntity;
 
@@ -16,6 +16,8 @@ class Entity extends AbstractEntity
     protected $name;
     /** @var int */
     protected $ownerId;
+    /** @var int */
+    protected $completed;
 
     /**
      * @return string
@@ -44,13 +46,31 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @param int $id
+     * @param int $ownerId
      * @return $this
      */
-    public function setOwnerId($id)
+    public function setOwnerId($ownerId)
     {
-        $this->ownerId = $id;
+        $this->ownerId = $ownerId;
         return $this;
+    }
+
+    /**
+     * @param int $state
+     * @return $this
+     */
+    public function setCompleted($state)
+    {
+        $this->completed = $state;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCompleted()
+    {
+        return $this->completed;
     }
 
 }

@@ -10,7 +10,7 @@ namespace Todo;
 
 use Predis\Client;
 
-class Cache implements ICache
+class Redis implements ICache
 {
     /** @var Client */
     private $storage;

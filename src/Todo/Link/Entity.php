@@ -6,14 +6,14 @@
  * Time: 18:35
  */
 
-namespace Todo\tLink;
+namespace Todo\Link;
 
 use Zergular\Common\AbstractEntity;
 
 class Entity extends AbstractEntity
 {
     /** @var int */
-    protected $listId;
+    protected $ownerId;
     /** @var int */
     protected $userId;
     /** @var int */
@@ -23,18 +23,18 @@ class Entity extends AbstractEntity
      * @param int $id
      * @return $this
      */
-    public function setListId($id)
+    public function setOwnerId($id)
     {
-        $this->listId = $id;
+        $this->ownerId = $id;
         return $this;
     }
 
     /**
      * @return int
      */
-    public function getListId()
+    public function getOwnerId()
     {
-        return $this->listId;
+        return $this->ownerId;
     }
 
     /**

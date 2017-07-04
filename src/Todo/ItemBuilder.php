@@ -8,9 +8,8 @@
 
 namespace Todo;
 
-use Todo\tList\Manager as listManager;
-use Todo\tTask\Manager as taskManager;
-use Todo\tLink\Manager as linkManager;
+use Todo\Task\Manager as taskManager;
+use Todo\Link\Manager as linkManager;
 use Zergular\Common\AbstractEntity;
 
 class ItemBuilder
@@ -19,34 +18,34 @@ class ItemBuilder
     private $path;
     /** @var ICache */
     private $cache;
-    /** @var listManager */
-    private $listManager;
     /** @var taskManager */
     private $taskManager;
     /** @var linkManager */
     private $linkManager;
+    /** @var UserApi */
+    private $userApi;
 
     /**
      * ItemBuilder constructor.
-     * @param listManager $listManager
      * @param taskManager $taskManager
      * @param linkManager $linkManager
      * @param ICache $cache
+     * @param UserApi $api
      * @param string $path
      */
     public function __construct(
-        listManager $listManager,
         taskManager $taskManager,
         linkManager $linkManager,
         ICache $cache,
+        UserApi $api,
         $path = 'itemCache'
     )
     {
-        $this->listManager = $listManager;
         $this->taskManager = $taskManager;
         $this->linkManager = $linkManager;
         $this->cache = $cache;
         $this->path = $path;
+        $this->userApi = $api;
     }
 
     /**
@@ -58,7 +57,7 @@ class ItemBuilder
     {
         $slot = $this->cache->get($this->getKeyName($itemId));
         if ($slot) {
-            //return json_decode($slot);
+            return json_decode($slot, TRUE);
         }
         $item = $this->build($itemId);
         return is_array($item)
@@ -73,15 +72,13 @@ class ItemBuilder
      */
     private function build($itemId)
     {
-        $list = $this->listManager->getById($itemId);
+        $list = $this->taskManager->getById($itemId);
         if (!$list) {
             return NULL;
         }
         $item = $list->toArray([]);
-        $item['owner'] = NULL; // TODO get call to auth service
-        $item['tasks'] = $this->processRows($this->taskManager->getAll(['listId' => $itemId]));
-        $item['links'] = $this->processRows($this->linkManager->getAll(['listId' => $itemId]));
-
+        $item['owner'] = $this->userApi->getNameById($item['ownerId']);
+        $item['share'] = $this->processRows($this->linkManager->getAll(['ownerId' => $item['ownerId']]));
         $this->cache->set($this->getKeyName($itemId), json_encode($item));
         return $item;
     }
@@ -96,6 +93,7 @@ class ItemBuilder
 
     /**
      * @param int $itemId
+     *
      * @return string
      */
     private function getKeyName($itemId)
@@ -105,6 +103,7 @@ class ItemBuilder
 
     /**
      * @param AbstractEntity[] $records
+     *
      * @return array
      */
     private function processRows($records = [])

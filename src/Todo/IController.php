@@ -10,12 +10,22 @@ namespace Todo;
 
 interface IController {
 
-    public function getLists($userId);
+    public function getConfigs();
 
-    public function getList($id);
+    public function getList($userId);
 
-    public function saveList($params);
+    public function getTask($id);
 
     public function saveTask($params);
+
+    public function removeTask($params);
+
+    public function setCompleted($params);
+
+    public function saveShare($params, $userId);
+
+    public function removeShare($params, $userId);
+
+    public function getShareList($params);
 
 }
