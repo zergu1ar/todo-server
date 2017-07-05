@@ -1,46 +1,43 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 14:09
- */
 
-namespace Todo;
+namespace Zergular\Todo;
 
-use Todo\Task\Manager as taskManager;
-use Todo\Link\Manager as linkManager;
+use Zergular\Todo\Task\TaskManagerInterface;
+use Zergular\Todo\Link\LinkManagerInterface;
 use Zergular\Common\AbstractEntity;
 
-class ItemBuilder
+/**
+ * Class ItemBuilder
+ * @package Zergular\Todo
+ */
+class ItemBuilder implements ItemBuilderInterface
 {
     /** @var string */
     private $path;
-    /** @var ICache */
+    /** @var CacheInterface */
     private $cache;
-    /** @var taskManager */
+    /** @var TaskManagerInterface */
     private $taskManager;
-    /** @var linkManager */
+    /** @var LinkManagerInterface */
     private $linkManager;
-    /** @var UserApi */
+    /** @var UserApiInterface */
     private $userApi;
 
     /**
      * ItemBuilder constructor.
-     * @param taskManager $taskManager
-     * @param linkManager $linkManager
-     * @param ICache $cache
-     * @param UserApi $api
+     * @param TaskManagerInterface $taskManager
+     * @param LinkManagerInterface $linkManager
+     * @param CacheInterface $cache
+     * @param UserApiInterface $api
      * @param string $path
      */
     public function __construct(
-        taskManager $taskManager,
-        linkManager $linkManager,
-        ICache $cache,
-        UserApi $api,
+        TaskManagerInterface $taskManager,
+        LinkManagerInterface $linkManager,
+        CacheInterface $cache,
+        UserApiInterface $api,
         $path = 'itemCache'
-    )
-    {
+    ) {
         $this->taskManager = $taskManager;
         $this->linkManager = $linkManager;
         $this->cache = $cache;
@@ -49,9 +46,7 @@ class ItemBuilder
     }
 
     /**
-     * @param int $itemId
-     *
-     * @return array|null
+     * @inheritdoc
      */
     public function get($itemId)
     {
@@ -84,7 +79,7 @@ class ItemBuilder
     }
 
     /**
-     * @param int $itemId
+     * @inheritdoc
      */
     public function clean($itemId)
     {

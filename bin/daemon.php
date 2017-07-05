@@ -1,27 +1,17 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 10:55
- */
 
 use Ratchet\Server\IoServer;
 use Ratchet\Http\HttpServer;
 use Ratchet\WebSocket\WsServer;
-use Todo\Sockets;
-use \Medoo\Medoo;
-use Todo\ICache;
-use Todo\Redis;
-use Todo\UserApi;
-
-require_once __DIR__ . '/../vendor/autoload.php';
+use Zergular\Todo\Sockets;
+use Predis\ClientInterface;
 
 define('USER_API_URL', 'http://127.0.0.1:8080/');
+require_once __DIR__ . '/../vendor/autoload.php';
 
 $builder = new DI\ContainerBuilder();
 $builder->addDefinitions([
-    Medoo::class => DI\object(Medoo::class)
+    Medoo\Medoo::class => DI\object(Medoo\Medoo::class)
         ->constructor([
             'database_type' => 'mysql',
             'database_name' => 'todo',
@@ -30,15 +20,21 @@ $builder->addDefinitions([
             'username' => 'root',
             'password' => 'passwd'
         ]),
-    Predis\Client::class => DI\object(Predis\Client::class)
+    ClientInterface::class => DI\object(Predis\Client::class)
         ->constructor([
             'scheme' => 'tcp',
             'host' => '127.0.0.1',
             'port' => 6379
         ]),
-    ICache::class => DI\object(Redis::class),
-    UserApi::class => DI\object(UserApi::class)
-        ->constructor(USER_API_URL)
+    \Zergular\Todo\CacheInterface::class => DI\object(\Zergular\Todo\Redis::class),
+    \Zergular\Todo\UserApiInterface::class => DI\object(\Zergular\Todo\UserApi::class)
+        ->constructor(USER_API_URL),
+    \Zergular\Todo\ControllerInterface::class => DI\object(\Zergular\Todo\Controller::class),
+    \Zergular\Todo\ItemBuilderInterface::class => DI\object(\Zergular\Todo\ItemBuilder::class),
+    \Zergular\Todo\Task\TaskManagerInterface::class => DI\object(\Zergular\Todo\Task\Manager::class),
+    \Zergular\Todo\Link\LinkManagerInterface::class=>DI\object(\Zergular\Todo\Link\Manager::class),
+    \Zergular\Todo\DataProviderInterface::class => DI\object(\Zergular\Todo\DataProvider::class),
+    \Zergular\Todo\PermissionManagerInterface::class => DI\object(\Zergular\Todo\PermissionManager::class)
 ]);
 
 $container = $builder->build();
@@ -47,8 +43,8 @@ $server = IoServer::factory(
     new HttpServer(
         new WsServer(
             new Sockets(
-                $container->get('\\Todo\\Controller'),
-                $container->get('\\Todo\\UserApi')
+                $container->get('Zergular\\Todo\\Controller'),
+                $container->get('Zergular\\Todo\\UserApi')
             )
         )
     ),

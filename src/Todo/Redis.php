@@ -1,37 +1,33 @@
 <?php
+
+namespace Zergular\Todo;
+
+use Predis\ClientInterface;
+
 /**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 20:46
+ * Class Redis
+ * @package Zergular\Todo
  */
-
-namespace Todo;
-
-use Predis\Client;
-
-class Redis implements ICache
+class Redis implements CacheInterface
 {
-    /** @var Client */
+    /** @var ClientInterface */
     private $storage;
     /** @var int */
     private $ttl;
 
     /**
      * Cache constructor.
-     * @param Client $redis
+     * @param ClientInterface $redis
      * @param int $ttl
      */
-    public function __construct(Client $redis, $ttl = 86400)
+    public function __construct(ClientInterface $redis, $ttl = 86400)
     {
         $this->storage = $redis;
         $this->ttl = $ttl;
     }
 
     /**
-     * @param string $key
-     * @param string $value
-     * @return int
+     * @inheritdoc
      */
     public function set($key, $value)
     {
@@ -39,8 +35,7 @@ class Redis implements ICache
     }
 
     /**
-     * @param string $key
-     * @return string
+     * @inheritdoc
      */
     public function get($key)
     {
@@ -48,12 +43,10 @@ class Redis implements ICache
     }
 
     /**
-     * @param string $key
-     * @return int
+     * @inheritdoc
      */
     public function clean($key)
     {
         return $this->storage->del([$key]);
     }
-
 }

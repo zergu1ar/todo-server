@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 18:35
- */
 
-namespace Todo\Link;
+namespace Zergular\Todo\Link;
 
 use Zergular\Common\AbstractEntity;
 
-class Entity extends AbstractEntity
+/**
+ * Class Entity
+ * @package Zergular\Todo\Link
+ */
+class Entity extends AbstractEntity implements LinkInterface
 {
     /** @var int */
     protected $ownerId;
@@ -20,8 +18,7 @@ class Entity extends AbstractEntity
     protected $permission;
 
     /**
-     * @param int $id
-     * @return $this
+     * @inheritdoc
      */
     public function setOwnerId($id)
     {
@@ -30,7 +27,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getOwnerId()
     {
@@ -38,8 +35,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @param int $id
-     * @return $this
+     * @inheritdoc
      */
     public function setUserId($id)
     {
@@ -48,7 +44,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getUserId()
     {
@@ -56,8 +52,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @param int $level
-     * @return $this
+     * @inheritdoc
      */
     public function setPermission($level)
     {
@@ -66,7 +61,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getPermission()
     {

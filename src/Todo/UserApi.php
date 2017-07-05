@@ -1,14 +1,12 @@
 <?php
+
+namespace Zergular\Todo;
+
 /**
- * Created by PhpStorm.
- * User: alexey
- * Date: 04.07.17
- * Time: 10:29
+ * Class UserApi
+ * @package Zergular\Todo
  */
-
-namespace Todo;
-
-class UserApi
+class UserApi implements UserApiInterface
 {
     /** @var string */
     private $url;
@@ -23,7 +21,7 @@ class UserApi
     }
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getApiUrl()
     {
@@ -31,11 +29,7 @@ class UserApi
     }
 
     /**
-     * @param string $name
-     * @param int $userId
-     * @param string $token
-     *
-     * @return int
+     * @inheritdoc
      */
     public function getIdByName($name, $userId, $token)
     {
@@ -54,9 +48,7 @@ class UserApi
     }
 
     /**
-     * @param int $id
-     *
-     * @return string
+     * @inheritdoc
      */
     public function getNameById($id)
     {
@@ -73,10 +65,7 @@ class UserApi
     }
 
     /**
-     * @param int $userId
-     * @param string $token
-     *
-     * @return bool
+     * @inheritdoc
      */
     public function checkAuth($userId, $token)
     {
@@ -100,5 +89,4 @@ class UserApi
         $params = http_build_query($data);
         return json_decode(file_get_contents($this->url . $path . '?' . $params), TRUE);
     }
-
 }

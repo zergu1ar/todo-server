@@ -1,33 +1,37 @@
 <?php
+
+namespace Zergular\Todo;
+
+use Zergular\Todo\Link\LinkInterface;
+
 /**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 12:51
+ * Class Controller
+ * @package Zergular\Todo
  */
-
-namespace Todo;
-
-use Todo\Link\Entity;
-
-class Controller implements IController
+class Controller implements ControllerInterface
 {
-    /** @var ItemBuilder */
+    /** @var ItemBuilderInterface */
     private $builder;
-    /** @var DataProvider */
+    /** @var DataProviderInterface */
     private $provider;
-    /** @var PermissionManager */
+    /** @var PermissionManagerInterface */
     private $permission;
-    /** @var UserApi */
+    /** @var UserApiInterface */
     private $userApi;
 
     /**
      * Controller constructor.
-     * @param ItemBuilder $builder
-     * @param DataProvider $finder
+     * @param ItemBuilderInterface $builder
+     * @param DataProviderInterface $finder
+     * @param UserApiInterface $api
+     * @param PermissionManagerInterface $perm
      */
-    public function __construct(ItemBuilder $builder, DataProvider $finder, UserApi $api, PermissionManager $perm)
-    {
+    public function __construct(
+        ItemBuilderInterface $builder,
+        DataProviderInterface $finder,
+        UserApiInterface $api,
+        PermissionManagerInterface $perm
+    ) {
         $this->builder = $builder;
         $this->provider = $finder;
         $this->permission = $perm;
@@ -35,7 +39,7 @@ class Controller implements IController
     }
 
     /**
-     * @return array
+     * @inheritdoc
      */
     public function getConfigs()
     {
@@ -49,9 +53,7 @@ class Controller implements IController
     }
 
     /**
-     * @param int $userId
-     *
-     * @return array
+     * @inheritdoc
      */
     public function getList($userId)
     {
@@ -93,9 +95,7 @@ class Controller implements IController
     }
 
     /**
-     * @param int $id
-     *
-     * @return array
+     * @inheritdoc
      */
     public function getTask($id)
     {
@@ -118,9 +118,7 @@ class Controller implements IController
     }
 
     /**
-     * @param array $params
-     *
-     * @return array
+     * @inheritdoc
      */
     public function saveTask($params)
     {
@@ -148,9 +146,7 @@ class Controller implements IController
     }
 
     /**
-     * @param array $params
-     *
-     * @return array
+     * @inheritdoc
      */
     public function removeTask($params)
     {
@@ -170,9 +166,7 @@ class Controller implements IController
     }
 
     /**
-     * @param array $params
-     *
-     * @return array
+     * @inheritdoc
      */
     public function setCompleted($params)
     {
@@ -189,10 +183,7 @@ class Controller implements IController
     }
 
     /**
-     * @param array $params
-     * @param int $userId
-     *
-     * @return array
+     * @inheritdoc
      */
     public function saveShare($params, $userId)
     {
@@ -217,10 +208,7 @@ class Controller implements IController
     }
 
     /**
-     * @param array $params
-     * @param int $userId
-     *
-     * @return array
+     * @inheritdoc
      */
     public function removeShare($params, $userId)
     {
@@ -237,13 +225,11 @@ class Controller implements IController
     }
 
     /**
-     * @param array $params
-     *
-     * @return array
+     * @inheritdoc
      */
     public function getShareList($params)
     {
-        /** @var Entity[] $list */
+        /** @var LinkInterface[] $list */
         $list = $this->provider->getShareList($params['userId']);
         $result = [
             'type' => 'shareList',

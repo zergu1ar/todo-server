@@ -1,35 +1,33 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 10:51
- */
 
-namespace Todo;
+namespace Zergular\Todo;
 
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;
 
+/**
+ * Class Sockets
+ * @package Zergular\Todo
+ */
 class Sockets implements MessageComponentInterface
 {
-    /** @var IController */
+    /** @var ControllerInterface */
     private $todo;
     /** @var \SplObjectStorage */
     private $clients;
     /** @var array */
     private $loggedUsers = [];
-    /** @var UserApi */
+    /** @var UserApiInterface */
     private $userApi;
 
     const STATUS_SUCCESS = 'success';
 
     /**
      * Sockets constructor.
-     * @param IController $controller
-     * @param UserApi $api
+     * @param ControllerInterface $controller
+     * @param UserApiInterface $api
      */
-    public function __construct(IController $controller, UserApi $api)
+    public function __construct(ControllerInterface $controller, UserApiInterface $api)
     {
         $this->userApi = $api;
         $this->todo = $controller;
@@ -37,7 +35,7 @@ class Sockets implements MessageComponentInterface
     }
 
     /**
-     * @param ConnectionInterface $conn
+     * @inheritdoc
      */
     public function onOpen(ConnectionInterface $conn)
     {
@@ -46,8 +44,7 @@ class Sockets implements MessageComponentInterface
     }
 
     /**
-     * @param ConnectionInterface $from
-     * @param string $msg
+     * @inheritdoc
      */
     public function onMessage(ConnectionInterface $from, $msg)
     {
@@ -124,7 +121,7 @@ class Sockets implements MessageComponentInterface
     {
         if ($this->userApi->checkAuth($msg['userId'], $msg['token'])) {
 
-            if (!$this->loggedUsers[$msg['userId']]) {
+            if (empty($this->loggedUsers[$msg['userId']])) {
                 $this->loggedUsers[$msg['userId']] = new \SplObjectStorage();
             }
 
@@ -138,7 +135,7 @@ class Sockets implements MessageComponentInterface
     }
 
     /**
-     * @param ConnectionInterface $conn
+     * @inheritdoc
      */
     public function onClose(ConnectionInterface $conn)
     {
@@ -152,8 +149,7 @@ class Sockets implements MessageComponentInterface
     }
 
     /**
-     * @param ConnectionInterface $conn
-     * @param \Exception $e
+     * @inheritdoc
      */
     public function onError(ConnectionInterface $conn, \Exception $e)
     {
@@ -222,6 +218,7 @@ class Sockets implements MessageComponentInterface
      * @param array $task
      * @param ConnectionInterface $from
      * @param array $msg
+     * @param int $userId
      */
     private function onChangeShare($task, $from, $msg, $userId)
     {
@@ -240,7 +237,6 @@ class Sockets implements MessageComponentInterface
     {
         $from->send($this->getResponse($this->todo->getShareList($msg)));
     }
-
 
     /**
      * @param array $params

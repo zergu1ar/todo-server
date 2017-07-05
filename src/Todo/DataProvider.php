@@ -1,41 +1,38 @@
 <?php
+
+namespace Zergular\Todo;
+
+use Zergular\Todo\Task\Entity as Task;
+use Zergular\Todo\Link\Entity as Link;
+use Zergular\Todo\Link\LinkInterface;
+use Zergular\Todo\Link\LinkManagerInterface;
+use Zergular\Todo\Task\TaskInterface;
+use Zergular\Todo\Task\TaskManagerInterface;
+
 /**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 21:53
+ * Class DataProvider
+ * @package Zergular\Todo
  */
-
-namespace Todo;
-
-use Zergular\Common\AbstractEntity;
-use Todo\Link\Entity as Link;
-use Todo\Task\Entity as Task;
-use Todo\Task\Manager as taskManager;
-use Todo\Link\Manager as linkManager;
-
-class DataProvider
+class DataProvider implements DataProviderInterface
 {
-    /** @var linkManager */
+    /** @var LinkManagerInterface */
     private $linkManager;
-    /** @var taskManager */
+    /** @var TaskManagerInterface */
     private $taskManager;
 
     /**
      * DataProvider constructor.
-     * @param taskManager $taskManager
-     * @param linkManager $linkManager
+     * @param TaskManagerInterface $taskManager
+     * @param LinkManagerInterface $linkManager
      */
-    public function __construct(taskManager $taskManager, linkManager $linkManager)
+    public function __construct(TaskManagerInterface $taskManager, LinkManagerInterface $linkManager)
     {
         $this->linkManager = $linkManager;
         $this->taskManager = $taskManager;
     }
 
     /**
-     * @param int|int[] $userId
-     *
-     * @return int[]
+     * @inheritdoc
      */
     public function getOwnItemIds($userId)
     {
@@ -43,9 +40,7 @@ class DataProvider
     }
 
     /**
-     * @param int $userId
-     *
-     * @return int[]
+     * @inheritdoc
      */
     public function getSharedItemsIds($userId)
     {
@@ -54,25 +49,27 @@ class DataProvider
     }
 
     /**
-     * @param array $params
-     *
-     * @return int|null
+     * @inheritdoc
      */
     public function saveTask($params)
     {
         $task = new Task;
         $task->setName($params['name'])
             ->setOwnerId($params['userId'])
-            ->setCompleted(isset($params['completed']) ? intval($params['completed']) : 0)
-            ->setId(isset($params['id']) ? intval($params['id']) : NULL);
+            ->setCompleted(isset($params['completed'])
+                ? intval($params['completed'])
+                : 0)
+            ->setId(isset($params['id'])
+                ? intval($params['id'])
+                : NULL);
         $task = $this->taskManager->save($task);
-        return $task ? $task->getId() : NULL;
+        return $task
+            ? $task->getId()
+            : NULL;
     }
 
     /**
-     * @param int $id
-     *
-     * @return bool|\PDOStatement
+     * @inheritdoc
      */
     public function removeTask($id)
     {
@@ -80,14 +77,11 @@ class DataProvider
     }
 
     /**
-     * @param int $id
-     * @param int $state
-     *
-     * @return AbstractEntity
+     * @inheritdoc
      */
     public function setCompleted($id, $state)
     {
-        /** @var Task $exists */
+        /** @var TaskInterface $exists */
         $exists = $this->taskManager->getById($id);
         if ($exists) {
             $exists->setCompleted($state);
@@ -97,10 +91,7 @@ class DataProvider
     }
 
     /**
-     * @param int $ownerId
-     * @param int $userId
-     *
-     * @return AbstractEntity
+     * @inheritdoc
      */
     public function getLink($ownerId, $userId)
     {
@@ -108,15 +99,11 @@ class DataProvider
     }
 
     /**
-     * @param int $ownerId
-     * @param int $userId
-     * @param int $perm
-     *
-     * @return AbstractEntity
+     * @inheritdoc
      */
     public function saveShare($ownerId, $userId, $perm)
     {
-        /** @var Link $exists */
+        /** @var LinkInterface $exists */
         $exists = $this->getLink($ownerId, $userId);
         if ($exists) {
             $exists->setPermission($perm);
@@ -130,10 +117,7 @@ class DataProvider
     }
 
     /**
-     * @param int $ownerId
-     * @param int $userId
-     *
-     * @return bool|\PDOStatement
+     * @inheritdoc
      */
     public function removeShare($ownerId, $userId)
     {
@@ -141,9 +125,7 @@ class DataProvider
     }
 
     /**
-     * @param int $id
-     *
-     * @return AbstractEntity
+     * @inheritdoc
      */
     public function getTask($id)
     {
@@ -151,9 +133,7 @@ class DataProvider
     }
 
     /**
-     * @param int $userId
-     *
-     * @return AbstractEntity[]
+     * @inheritdoc
      */
     public function getShareList($userId)
     {

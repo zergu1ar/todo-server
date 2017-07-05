@@ -1,16 +1,14 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 18:27
- */
 
-namespace Todo\Task;
+namespace Zergular\Todo\Task;
 
 use Zergular\Common\AbstractEntity;
 
-class Entity extends AbstractEntity
+/**
+ * Class Entity
+ * @package Zergular\Todo\Task
+ */
+class Entity extends AbstractEntity implements TaskInterface
 {
     /** @var string */
     protected $name;
@@ -20,7 +18,7 @@ class Entity extends AbstractEntity
     protected $completed;
 
     /**
-     * @return string
+     * @inheritdoc
      */
     public function getName()
     {
@@ -28,8 +26,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @param string $name
-     * @return $this
+     * @inheritdoc
      */
     public function setName($name)
     {
@@ -38,7 +35,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getOwnerId()
     {
@@ -46,8 +43,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @param int $ownerId
-     * @return $this
+     * @inheritdoc
      */
     public function setOwnerId($ownerId)
     {
@@ -56,8 +52,7 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @param int $state
-     * @return $this
+     * @inheritdoc
      */
     public function setCompleted($state)
     {
@@ -66,11 +61,10 @@ class Entity extends AbstractEntity
     }
 
     /**
-     * @return int
+     * @inheritdoc
      */
     public function getCompleted()
     {
         return $this->completed;
     }
-
 }

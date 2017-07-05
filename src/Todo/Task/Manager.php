@@ -1,23 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 18:31
- */
 
-namespace Todo\Task;
+namespace Zergular\Todo\Task;
 
 use Zergular\Common\AbstractManager;
 
-class Manager extends AbstractManager
+/**
+ * Class Manager
+ * @package Zergular\Todo\Task
+ */
+class Manager extends AbstractManager implements TaskManagerInterface
 {
+    /** @var string */
     protected $tableName = 'todoTask';
-    protected $entityName = '\\Todo\\Task\\Entity';
+    /** @var string */
+    protected $entityName = '\\Zergular\\Todo\\Task\\Entity';
 
     /**
-     * @param int $userId
-     * @return int[]
+     * @inheritdoc
      */
     public function getOwnIds($userId)
     {

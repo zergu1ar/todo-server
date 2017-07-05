@@ -1,49 +1,52 @@
 <?php
+
+namespace Zergular\Todo;
+
+use Zergular\Todo\Link\LinkInterface;
+use Zergular\Todo\Task\TaskInterface;
+
 /**
- * Created by PhpStorm.
- * User: alexey
- * Date: 04.07.17
- * Time: 9:05
+ * Class PermissionManager
+ * @package Zergular\Todo
  */
-
-namespace Todo;
-
-use Todo\Task\Entity as Task;
-use Todo\Link\Entity as Link;
-
-class PermissionManager
+class PermissionManager implements PermissionManagerInterface
 {
-    /** @var DataProvider */
+    /** @var DataProviderInterface */
     private $provider;
 
-    public function __construct(DataProvider $provider)
+    /**
+     * PermissionManager constructor.
+     * @param DataProviderInterface $provider
+     */
+    public function __construct(DataProviderInterface $provider)
     {
         $this->provider = $provider;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function checkRead($userId, $id)
     {
-        /** @var Task $item */
+        /** @var TaskInterface $item */
         $item = $this->provider->getTask($id);
         if ($item->getOwnerId() == $userId) {
             return TRUE;
         }
-        /** @var Link */
-        $link = $this->provider->getLink($item->getOwnerId(), $userId);
-        if ($link) {
-            return TRUE;
-        }
-        return FALSE;
+        return $this->provider->getLink($item->getOwnerId(), $userId) instanceof LinkInterface;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function checkWrite($userId, $id)
     {
-        /** @var Task $item */
+        /** @var TaskInterface $item */
         $item = $this->provider->getTask($id);
         if ($item && $item->getOwnerId() != $userId) {
-            /** @var Link $link */
+            /** @var LinkInterface $link */
             $link = $this->provider->getLink($item->getOwnerId(), $userId);
-            if (!$link || $link->getPermission() == 0) {
+            if (!($link instanceof LinkInterface) || $link->getPermission() == 0) {
                 return FALSE;
             }
         }

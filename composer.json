@@ -1,13 +1,10 @@
 {
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "http://github.com/Zergu1ar/CommonLibs"
-    }
-  ],
+  "name": "zergular/todo-server",
+  "description": "A websocket server for todo project",
+  "version": "0.1",
   "autoload": {
     "psr-4": {
-      "Todo\\": "src/Todo"
+      "Zergular\\Todo\\": "src/Todo/"
     }
   },
   "require": {

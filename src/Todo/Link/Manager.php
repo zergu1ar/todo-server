@@ -1,25 +1,22 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: alexey
- * Date: 02.07.17
- * Time: 19:27
- */
 
-namespace Todo\Link;
+namespace Zergular\Todo\Link;
 
 use Zergular\Common\AbstractManager;
 
-class Manager extends AbstractManager
+/**
+ * Class Manager
+ * @package Zergular\Todo\Link
+ */
+class Manager extends AbstractManager implements LinkManagerInterface
 {
     /** @var string */
     protected $tableName = 'todoLink';
     /** @var string */
-    protected $entityName = '\\Todo\\Link\\Entity';
+    protected $entityName = '\\Zergular\\Todo\\Link\\Entity';
 
     /**
-     * @param int $userId
-     * @return array
+     * @inheritdoc
      */
     public function getSharedIds($userId)
     {
