@@ -9,7 +9,7 @@
   },
   "require": {
     "cboden/ratchet": "0.3.*",
-    "zergular/common": "dev-master",
+    "zergular/common": "0.1",
     "php-di/php-di": "^5.4",
     "predis/predis": "^1.1"
   }
