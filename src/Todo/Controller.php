@@ -122,7 +122,8 @@ class Controller implements ControllerInterface
      */
     public function saveTask($params)
     {
-        if (!$this->permission->checkWrite($params['userId'], $params['id'])) {
+        $id = empty($params['id']) ? 0 : $params['id'];
+        if (!$this->permission->checkWrite($params['userId'], $id)) {
             return $this->notAllowed();
         }
         $name = trim(empty($params['name']) ? '' : $params['name']);

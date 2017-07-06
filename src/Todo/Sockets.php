@@ -184,7 +184,9 @@ class Sockets implements MessageComponentInterface
             return;
         }
         foreach ($shared as $share) {
-            $storage = $this->loggedUsers[$share['userId']];
+            $storage = isset($this->loggedUsers[$share['userId']])
+                ? $this->loggedUsers[$share['userId']]
+                : FALSE;
             if (!$storage) {
                 continue;
             }
