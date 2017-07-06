@@ -10,13 +10,15 @@ use Zergular\Common\Config;
 require_once __DIR__ . '/../vendor/autoload.php';
 
 Config::setDir(__DIR__ .'/../config/');
+$db = Config::get('db');
+$redis = Config::get('redis');
 
 $builder = new DI\ContainerBuilder();
 $builder->addDefinitions([
     Medoo\Medoo::class => DI\object(Medoo\Medoo::class)
-        ->constructor(Config::get('db')),
+        ->constructor($db),
     ClientInterface::class => DI\object(Predis\Client::class)
-        ->constructor(Config::get('redis')),
+        ->constructor($redis),
     \Zergular\Todo\CacheInterface::class => DI\object(\Zergular\Todo\Redis::class),
     \Zergular\Todo\UserApiInterface::class => DI\object(\Zergular\Todo\UserApi::class)
         ->constructor(Config::get('user')['api_url']),
